@@ -25,9 +25,7 @@ async function getJson() {
 
 function selectTheme() {
     document.querySelector("body").setAttribute("data-house", this.value);
-
 }
-
 
 function showStudents() {
     console.log("showStudents");
