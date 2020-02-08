@@ -1,9 +1,15 @@
+:root {
+    --primary-color: white;
+    --secondary-color: black;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
+    background-color: var(--primary-color);
 }
 
 html {
@@ -13,6 +19,8 @@ html {
 
 h1 {
     font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
 }
 
 h2 {
@@ -30,10 +38,18 @@ li {
     font-size: 1.6rem;
     cursor: pointer;
     width: fit-content;
+    color: var(--secondary-color);
+    line-height: 1.5;
+}
+
+label {
+    font-size: 2rem;
+    color: var(--secondary-color);
 }
 
 .student-wrapper {
     padding: 30px;
+    filter: blur(0px);
 }
 
 .popup {
@@ -43,21 +59,71 @@ li {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: rgba(32, 72, 15, 0.7);
+    background-color: rgba(255, 255, 255, 0.3);
     justify-content: center;
     align-items: center;
 }
 
+.popup-appear {
+    display: flex;
+}
+
+.wrapper-effect {
+    filter: blur(3px);
+}
+
 .popup-content {
     width: 80%;
+    max-width: 600px;
     height: 60%;
-    background-color: white;
+    color: var(--secondary-color);
+    background-color: var(--primary-color);
     padding: 30px;
     position: relative;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.crest {
+    width: 250px;
+    height: 250px;
+    background-size: 100%;
+    background-image: var(--house-crest);
 }
 
 .close {
     position: absolute;
     top: 30px;
     right: 30px;
+    font-size: 2.5rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: transparent;
+    appearance: none;
+    color: var(--secondary-color);
+}
+
+
+[data-house="Hufflepuff"] {
+    --primary-color: #EEE117;
+    --secondary-color: #000000;
+    --house-crest: url(assets/hufflepuff-emblem.png);
+}
+
+[data-house="Gryffindor"] {
+    --primary-color: #7F0909;
+    --secondary-color: #FFC500;
+    --house-crest: url(assets/gryffindor-emblem.png);
+}
+
+[data-house="Ravenclaw"] {
+    --primary-color: #000A90;
+    --secondary-color: #946B2D;
+    --house-crest: url(assets/ravenclaw-emblem.png);
+}
+
+[data-house="Slytherin"] {
+    --primary-color: #0D6217;
+    --secondary-color: #AAAAAA;
+    --house-crest: url(assets/slytherin-emblem.png);
 }
