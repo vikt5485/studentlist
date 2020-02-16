@@ -1,76 +1,146 @@
-let students = [];
-const template = document.querySelector(".student-temp");
-const dest = document.querySelector(".student-list");
-const popup = document.querySelector(".popup");
-const wrapper = document.querySelector(".student-wrapper");
+"use strict";
 
 document.addEventListener("DOMContentLoaded", start);
 
+const HTML = {};
+let students = [];
+let allStudents = [];
+let studentCount;
+
+const Student = {
+  firstName: "",
+  lastName: "",
+  middleName: "",
+  nickName: "",
+  image: null,
+  house: ""
+};
+
 function start() {
   console.log("start");
+  HTML.template = document.querySelector(".student-temp");
+  HTML.dest = document.querySelector(".student-list");
+  HTML.popup = document.querySelector(".popup");
+  HTML.wrapper = document.querySelector(".student-wrapper");
+  studentCount = 0;
+
   getJson();
-  document
-    .querySelector("select#theme")
-    .addEventListener("change", selectTheme);
+  document.querySelector("select#theme").addEventListener("change", selectTheme);
 }
 
 async function getJson() {
   console.log("getJson");
 
-  const jsonData = await fetch("students1991.json");
+  const jsonData = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
 
   students = await jsonData.json();
-  console.log(students);
-
   showStudents();
 }
 
 function selectTheme() {
-  document
-    .querySelector("body")
-    .setAttribute("data-house", this.value.toLowerCase());
+  document.querySelector("body").setAttribute("data-house", this.value.toLowerCase());
 }
 
 function showStudents() {
   console.log("showStudents");
   students.forEach(showAStudent);
+  console.log(allStudents);
 }
 
-function showAStudent(student) {
-  let klon = template.cloneNode(true).content;
+function showAStudent(studentData) {
+  let student = Object.create(Student);
 
-  klon.querySelector("li").textContent = student.fullname;
-  if (student.fullname == "Harry Potter") {
-    klon.querySelector("li").textContent = student.fullname + " ⚡";
+  // FULL NAME
+  let fullName = studentData.fullname.trim();
+  fullName = fullName.toLowerCase();
+
+  // FIRST NAME
+  let firstChar = fullName.substring(0, 1);
+  firstChar = firstChar.toUpperCase();
+
+  student.firstName = fullName.substring(1, fullName.indexOf(" "));
+  student.firstName = firstChar + student.firstName;
+
+
+
+  // LAST NAME
+  student.lastName = fullName.substring(fullName.lastIndexOf(" ") + 1, fullName.length + 1);
+
+  let firstCharLastName = student.lastName.substring(0, 1);
+  firstCharLastName = firstCharLastName.toUpperCase();
+  student.lastName = firstCharLastName + fullName.substring(fullName.lastIndexOf(" ") + 2, fullName.length + 1);
+
+  if (student.lastName.includes("-")) {
+    let firstLastName = student.lastName.substring(0, student.lastName.indexOf("-"));
+    let secondLastName = student.lastName.substring(student.lastName.indexOf("-") + 1);
+    let firstCharSecondLastName = secondLastName.substring(0, 1);
+    firstCharSecondLastName = firstCharSecondLastName.toUpperCase();
+    secondLastName = firstCharSecondLastName + student.lastName.substring(student.lastName.indexOf("-") + 2);
+
+    student.lastName = firstLastName + "-" + secondLastName;
   }
 
-  dest.appendChild(klon);
+  // MIDDLE NAME
+  student.middleName = fullName.substring(student.firstName.length + 1, fullName.lastIndexOf(" "));
+  let firstCharMiddle = student.middleName.substring(0, 1);
+  firstCharMiddle = firstCharMiddle.toUpperCase();
 
-  dest.lastElementChild.addEventListener("click", () => {
-    showPopup(student);
+  if (student.middleName == " ") {
+    student.middleName = "";
+  } else if (student.middleName.includes('"')) {
+    firstCharMiddle = student.middleName.substring(1, 2);
+    firstCharMiddle = firstCharMiddle.toUpperCase();
+    student.middleName = '"' + firstCharMiddle + fullName.substring(student.firstName.length + 3, fullName.lastIndexOf(" "));
+  } else {
+    student.middleName = firstCharMiddle + fullName.substring(student.firstName.length + 2, fullName.lastIndexOf(" "));
+  }
+
+
+  // student.nickName =
+  // student.image =
+  // student.house =
+
+  if (fullName.includes(" ") == false) {
+    student.firstName = fullName.substring(1);
+    student.firstName = firstChar + student.firstName;
+
+    student.middleName = "";
+    student.lastName = "";
+  }
+  fullName = student.firstName + " " + student.middleName + " " + student.lastName;
+
+  let klon = HTML.template.cloneNode(true).content;
+
+  klon.querySelector("li").textContent = fullName;
+  if (fullName == "Harry James Potter") {
+    klon.querySelector("li").textContent = fullName + " ⚡";
+  }
+
+  HTML.dest.appendChild(klon);
+
+  HTML.dest.lastElementChild.addEventListener("click", () => {
+    showPopup(studentData);
   });
+
+  allStudents.push(student);
 }
 
-function showPopup(student) {
+function showPopup(studentData) {
   console.log("showPopup");
-  popup.classList.add("popup-appear");
-  wrapper.classList.add("wrapper-effect");
+  HTML.popup.classList.add("popup-appear");
+  HTML.wrapper.classList.add("wrapper-effect");
 
-  document
-    .querySelector(".popup-content")
-    .setAttribute("data-house", student.house.toLowerCase());
+  document.querySelector(".popup-content").setAttribute("data-house", studentData.house.toLowerCase());
 
-  document.querySelector(".popup-content>h2").textContent = student.fullname;
-  document.querySelector(".popup-content>h3").textContent =
-    "House: " + student.house;
+  document.querySelector(".popup-content>h2").textContent = studentData.fullname;
+  document.querySelector(".popup-content>h3").textContent = "House: " + studentData.house;
 
-  if (student.fullname == "Harry Potter") {
-    document.querySelector(".popup-content>h2").textContent =
-      student.fullname + " ⚡";
+  if (studentData.fullname == "Harry Potter") {
+    document.querySelector(".popup-content>h2").textContent = studentData.fullname + " ⚡";
   }
 
   document.querySelector(".close").addEventListener("click", () => {
-    popup.classList.remove("popup-appear");
-    wrapper.classList.remove("wrapper-effect");
+    HTML.popup.classList.remove("popup-appear");
+    HTML.wrapper.classList.remove("wrapper-effect");
   });
 }
