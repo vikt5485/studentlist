@@ -3,16 +3,16 @@
 document.addEventListener("DOMContentLoaded", start);
 
 const HTML = {};
-let students = [];
+let studentsJSON = [];
 let allStudents = [];
 let studentCount;
 
 const Student = {
   firstName: "",
   lastName: "",
-  middleName: "",
-  nickName: "",
-  image: null,
+  middleName: undefined,
+  nickName: undefined,
+  image: undefined,
   house: ""
 };
 
@@ -22,6 +22,8 @@ function start() {
   HTML.dest = document.querySelector(".student-list");
   HTML.popup = document.querySelector(".popup");
   HTML.wrapper = document.querySelector(".student-wrapper");
+  HTML.studentName = document.querySelector(".popup-content>h2");
+
   studentCount = 0;
 
   getJson();
@@ -33,21 +35,21 @@ async function getJson() {
 
   const jsonData = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
 
-  students = await jsonData.json();
-  showStudents();
+  studentsJSON = await jsonData.json();
+  prepareObjects();
 }
 
 function selectTheme() {
-  document.querySelector("body").setAttribute("data-house", this.value.toLowerCase());
+  document.querySelector("body").setAttribute("data-house", this.value);
 }
 
-function showStudents() {
-  console.log("showStudents");
-  students.forEach(showAStudent);
+function prepareObjects() {
+  console.log("prepareObjects");
+  studentsJSON.forEach(cleanData);
   console.log(allStudents);
 }
 
-function showAStudent(studentData) {
+function cleanData(studentData) {
   let student = Object.create(Student);
 
   // FULL NAME
@@ -60,8 +62,6 @@ function showAStudent(studentData) {
 
   student.firstName = fullName.substring(1, fullName.indexOf(" "));
   student.firstName = firstChar + student.firstName;
-
-
 
   // LAST NAME
   student.lastName = fullName.substring(fullName.lastIndexOf(" ") + 1, fullName.length + 1);
@@ -86,57 +86,86 @@ function showAStudent(studentData) {
   firstCharMiddle = firstCharMiddle.toUpperCase();
 
   if (student.middleName == " ") {
-    student.middleName = "";
+    student.middleName = undefined;
   } else if (student.middleName.includes('"')) {
     firstCharMiddle = student.middleName.substring(1, 2);
     firstCharMiddle = firstCharMiddle.toUpperCase();
-    student.middleName = '"' + firstCharMiddle + fullName.substring(student.firstName.length + 3, fullName.lastIndexOf(" "));
+    student.nickName = firstCharMiddle + fullName.substring(student.firstName.length + 3, fullName.lastIndexOf(" ") - 1);
+    student.middleName = undefined;
   } else {
     student.middleName = firstCharMiddle + fullName.substring(student.firstName.length + 2, fullName.lastIndexOf(" "));
   }
-
-
-  // student.nickName =
-  // student.image =
-  // student.house =
 
   if (fullName.includes(" ") == false) {
     student.firstName = fullName.substring(1);
     student.firstName = firstChar + student.firstName;
 
-    student.middleName = "";
-    student.lastName = "";
+    student.middleName = undefined;
+    student.lastName = undefined;
   }
-  fullName = student.firstName + " " + student.middleName + " " + student.lastName;
 
+  // NICK NAME
+
+  // student.image =
+
+  // HOUSE
+  student.house = studentData.house.toLowerCase();
+  student.house = student.house.trim()
+  let houseFirstChar = student.house.substring(0, 1);
+  houseFirstChar = houseFirstChar.toUpperCase();
+  student.house = houseFirstChar + student.house.substring(1);
+
+  allStudents.push(student);
+  showStudent(student);
+}
+
+function showStudent(student) {
   let klon = HTML.template.cloneNode(true).content;
 
-  klon.querySelector("li").textContent = fullName;
-  if (fullName == "Harry James Potter") {
-    klon.querySelector("li").textContent = fullName + " ⚡";
+  if (student.lastName == undefined) {
+    klon.querySelector("li").textContent = student.firstName;
+  } else {
+    klon.querySelector("li").textContent = student.firstName + " " + student.lastName;
+  }
+
+
+
+  if (student.lastName == "Potter") {
+    klon.querySelector("li").textContent = student.firstName + " " + student.lastName; + " ⚡";
   }
 
   HTML.dest.appendChild(klon);
 
   HTML.dest.lastElementChild.addEventListener("click", () => {
-    showPopup(studentData);
+    showPopup(student);
   });
-
-  allStudents.push(student);
 }
 
-function showPopup(studentData) {
+function showPopup(student) {
   console.log("showPopup");
+
   HTML.popup.classList.add("popup-appear");
   HTML.wrapper.classList.add("wrapper-effect");
 
-  document.querySelector(".popup-content").setAttribute("data-house", studentData.house.toLowerCase());
+  document.querySelector(".popup-content").setAttribute("data-house", student.house);
 
-  document.querySelector(".popup-content>h2").textContent = studentData.fullname;
-  document.querySelector(".popup-content>h3").textContent = "House: " + studentData.house;
+  if (student.lastName == undefined) {
+    console.log(student.firstName);
+    HTML.studentName.textContent = student.firstName;
+  } else if (student.middleName == undefined) {
+    HTML.studentName.textContent = student.firstName + " " + student.lastName;
+  } else {
+    HTML.studentName.textContent = student.firstName + " " + student.middleName + " " + student.lastName;
+  }
 
-  if (studentData.fullname == "Harry Potter") {
-    document.querySelector(".popup-content>h2").textContent = studentData.fullname + " ⚡";
+  if (student.nickName != undefined) {
+    HTML.studentName.textContent = `${student.firstName} "${student.nickName}" ${student.lastName}`;
+  }
+
+  document.querySelector(".popup-content>h4").textContent = "House: " + student.house;
+
+  if (student.fullName == "Harry James Potter") {
+    HTML.studentName.textContent = student.fullName + " ⚡";
   }
 
   document.querySelector(".close").addEventListener("click", () => {

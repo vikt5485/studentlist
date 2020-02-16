@@ -35,12 +35,17 @@ h2 {
   font-weight: 900;
 }
 
-h3 {
+h3, h4 {
   font-size: 1.8rem;
-  margin-top: 5px;
+  margin: 5px 0;
   font-weight: 300;
   font-family: var(--headline-font);
   font-weight: 400;
+  font-style: italic;
+}
+
+h4 {
+  font-style: normal;
 }
 
 li {
@@ -139,25 +144,25 @@ hr {
   color: var(--secondary-color);
 }
 
-[data-house="hufflepuff"] {
+[data-house="Hufflepuff"] {
   --primary-color: #eee117;
   --secondary-color: #000000;
   --house-crest: url(assets/hufflepuff-emblem.png);
 }
 
-[data-house="gryffindor"] {
+[data-house="Gryffindor"] {
   --primary-color: #7f0909;
   --secondary-color: #ffc500;
   --house-crest: url(assets/gryffindor-emblem.png);
 }
 
-[data-house="ravenclaw"] {
+[data-house="Ravenclaw"] {
   --primary-color: #000a90;
   --secondary-color: #946b2d;
   --house-crest: url(assets/ravenclaw-emblem.png);
 }
 
-[data-house="slytherin"] {
+[data-house="Slytherin"] {
   --primary-color: #0d6217;
   --secondary-color: #aaaaaa;
   --house-crest: url(assets/slytherin-emblem.png);
