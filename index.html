@@ -26,8 +26,15 @@
         </select>
       </label>
       <hr />
-      <ul class="student-list"></ul>
+      <section class="student-list">
+        <div class="info">
+          <h3>Student name</h3>
+          <h3>House</h3>
+        </div>
+      </section>
     </section>
+
+
     <div class="popup">
       <article class="popup-content">
         <button class="close">X</button>
@@ -39,7 +46,11 @@
   </main>
   <footer></footer>
   <template class="student-temp">
-    <li></li>
+    <div class="student">
+      <p class="name"></p>
+      <p class="house"></p>
+      <button class="expell">Expel student</button>
+    </div>
   </template>
   <script src="script.js"></script>
 </body>

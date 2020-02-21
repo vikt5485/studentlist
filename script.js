@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", start);
 const HTML = {};
 let studentsJSON = [];
 let allStudents = [];
-let studentCount;
+
 
 const Student = {
   firstName: "",
@@ -24,8 +24,6 @@ function start() {
   HTML.wrapper = document.querySelector(".student-wrapper");
   HTML.studentName = document.querySelector(".popup-content>h2");
 
-  studentCount = 0;
-
   getJson();
   document.querySelector("select#theme").addEventListener("change", selectTheme);
 }
@@ -36,17 +34,12 @@ async function getJson() {
   const jsonData = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
 
   studentsJSON = await jsonData.json();
-  prepareObjects();
+  studentsJSON.forEach(cleanData);
+  listReady();
 }
 
 function selectTheme() {
   document.querySelector("body").setAttribute("data-house", this.value);
-}
-
-function prepareObjects() {
-  console.log("prepareObjects");
-  studentsJSON.forEach(cleanData);
-  console.log(allStudents);
 }
 
 function cleanData(studentData) {
@@ -123,20 +116,16 @@ function showStudent(student) {
   let klon = HTML.template.cloneNode(true).content;
 
   if (student.lastName == undefined) {
-    klon.querySelector("li").textContent = student.firstName;
+    klon.querySelector(".name").textContent = student.firstName;
   } else {
-    klon.querySelector("li").textContent = student.firstName + " " + student.lastName;
+    klon.querySelector(".name").textContent = student.firstName + " " + student.lastName;
   }
 
-
-
-  if (student.lastName == "Potter") {
-    klon.querySelector("li").textContent = student.firstName + " " + student.lastName; + " ⚡";
-  }
+  klon.querySelector(".house").textContent = student.house;
 
   HTML.dest.appendChild(klon);
 
-  HTML.dest.lastElementChild.addEventListener("click", () => {
+  HTML.dest.lastElementChild.querySelector(".name").addEventListener("click", () => {
     showPopup(student);
   });
 }
@@ -164,12 +153,13 @@ function showPopup(student) {
 
   document.querySelector(".popup-content>h4").textContent = "House: " + student.house;
 
-  if (student.fullName == "Harry James Potter") {
-    HTML.studentName.textContent = student.fullName + " ⚡";
-  }
-
   document.querySelector(".close").addEventListener("click", () => {
     HTML.popup.classList.remove("popup-appear");
     HTML.wrapper.classList.remove("wrapper-effect");
   });
+}
+
+function listReady() {
+  console.log("listReady");
+  console.table(allStudents);
 }
