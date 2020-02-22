@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", start);
 const HTML = {};
 let studentsJSON = [];
 let allStudents = [];
+let selectedFilter;
 
 
 const Student = {
@@ -26,6 +27,7 @@ function start() {
 
   getJson();
   document.querySelector("select#theme").addEventListener("change", selectTheme);
+  document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
 }
 
 async function getJson() {
@@ -35,11 +37,8 @@ async function getJson() {
 
   studentsJSON = await jsonData.json();
   studentsJSON.forEach(cleanData);
+  displayStudents(allStudents);
   listReady();
-}
-
-function selectTheme() {
-  document.querySelector("body").setAttribute("data-house", this.value);
 }
 
 function cleanData(studentData) {
@@ -109,7 +108,13 @@ function cleanData(studentData) {
   student.house = houseFirstChar + student.house.substring(1);
 
   allStudents.push(student);
-  showStudent(student);
+  return allStudents;
+}
+
+function displayStudents(studentArray) {
+  HTML.dest.innerHTML = "";
+  studentArray.forEach(showStudent);
+  console.table(studentArray);
 }
 
 function showStudent(student) {
@@ -161,5 +166,40 @@ function showPopup(student) {
 
 function listReady() {
   console.log("listReady");
-  console.table(allStudents);
+}
+
+
+
+
+function handleFilter() {
+  selectedFilter = this.dataset.filter;
+  console.log(selectedFilter);
+
+  filterArray(selectedFilter);
+}
+
+function filterArray(selectedFilter) {
+  let filteredArray = [];
+
+  if (selectedFilter == "*") {
+    filteredArray = allStudents;
+  } else {
+    filteredArray = studentsFilteredByHouse(selectedFilter);
+  }
+
+  displayStudents(filteredArray);
+}
+
+function studentsFilteredByHouse(house) {
+  const result = allStudents.filter(filterFunction);
+
+  function filterFunction(student) {
+    return student.house === house;
+  }
+
+  return result;
+}
+
+function selectTheme() {
+  document.querySelector("body").setAttribute("data-house", this.value);
 }
