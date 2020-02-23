@@ -6,6 +6,7 @@ const HTML = {};
 let studentsJSON = [];
 let allStudents = [];
 let selectedFilter;
+let studentArray = [];
 
 
 const Student = {
@@ -25,11 +26,9 @@ function start() {
   HTML.popup = document.querySelector(".popup");
   HTML.wrapper = document.querySelector(".student-wrapper");
   HTML.studentName = document.querySelector(".popup-content>h2");
+  HTML.searchField = document.querySelector("#search_field");
 
   getJson();
-  document.querySelector("select#theme").addEventListener("change", selectTheme);
-  document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
-
 }
 
 async function getJson() {
@@ -140,6 +139,31 @@ function displayStudents(studentArray) {
     studentArray = studentArray.sort(sortByHouse);
     displayStudents(studentArray);
   });
+
+  document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
+  // HTML.searchField.addEventListener("keyup", search);
+  document.querySelector("select#theme").addEventListener("change", selectTheme);
+
+
+
+
+  HTML.searchField.addEventListener("keyup", function (search) {
+    console.log("key up");
+
+    const searchValue = search.target.value.toLowerCase();
+    const students = document.querySelectorAll(".student");
+
+    Array.from(students).forEach(student => {
+      const name = student.querySelector(".name").textContent;
+      student.className = "student";
+
+      if (name.toLowerCase().indexOf(searchValue) != -1) {
+        student.classList.add("student");
+      } else {
+        student.classList.add("hide");
+      }
+    })
+  })
 }
 
 function showStudent(student) {
@@ -194,6 +218,7 @@ function showPopup(student) {
 
 function listReady() {
   console.log("listReady");
+
 }
 
 function handleFilter() {
@@ -241,6 +266,10 @@ function sortByHouse(a, b) {
   }
 }
 
+
+function search() {
+  console.log("search");
+}
 
 
 function selectTheme() {
