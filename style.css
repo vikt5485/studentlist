@@ -30,7 +30,7 @@ h1 {
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 0;
   font-family: var(--headline-font);
   font-weight: 900;
@@ -211,9 +211,8 @@ hr {
 }
 
 .popup-content {
-  width: 80%;
-  max-width: 600px;
-  height: 60%;
+  width: auto;
+  max-width: 800px;
   color: var(--secondary-color);
   background-color: var(--primary-color);
   padding: 30px;
@@ -221,11 +220,18 @@ hr {
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+.popup-content>img {
+  align-self: center;
+  justify-self: center;
+  margin: 30px auto 5px auto;
+}
+
 .crest {
-  width: 250px;
-  height: 250px;
+  width: 150px;
+  height: 150px;
   background-size: 100%;
   background-image: var(--house-crest);
+  margin: auto;
 }
 
 .close {
@@ -243,6 +249,23 @@ hr {
 
 .hide {
   display: none;
+}
+
+
+@media screen and (min-width: 680px) {
+  .popup-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .popup-content>img {
+    margin: 0;
+  }
+
+  .crest {
+
+    margin: 0;
+  }
 }
 
 

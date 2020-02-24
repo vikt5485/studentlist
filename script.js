@@ -29,7 +29,7 @@ function start() {
   HTML.dest = document.querySelector(".student-list");
   HTML.popup = document.querySelector(".popup");
   HTML.wrapper = document.querySelector(".student-wrapper");
-  HTML.studentName = document.querySelector(".popup-content>h2");
+  HTML.studentName = document.querySelector(".popup-name");
   HTML.searchField = document.querySelector("#search_field");
 
 
@@ -199,13 +199,8 @@ function expelStudent(student) {
 
   if (student.expelled === false) {
     student.expelled = true;
+    student.prefect = false;
   }
-
-
-
-
-  // allStudents.splice(allStudents.indexOf(student));
-  // currentStudents = allStudents;
 
   if (currentStudents.length < 1) {
     return allStudents;
@@ -237,8 +232,25 @@ function showPopup(student) {
   HTML.wrapper.classList.add("wrapper-effect");
 
   document.querySelector(".popup-content").setAttribute("data-house", student.house);
-  document.querySelector(".popup-content>h4").textContent = "House: " + student.house;
+
+  document.querySelector(".popup-house").textContent = "House: " + student.house;
+  document.querySelector(".popup-blood").textContent = "Blood-status: " + undefined;
   document.querySelector(".popup-content>img").src = `images/${student.image}.png`;
+
+  if (student.prefect) {
+    document.querySelector(".popup-prefect").textContent = "Prefect: Yes";
+  } else {
+    document.querySelector(".popup-prefect").textContent = "Prefect: No";
+  }
+
+  if (student.expelled) {
+    document.querySelector(".popup-expelled").textContent = "Expelled: Yes";
+  } else {
+    document.querySelector(".popup-expelled").textContent = "Expelled: No";
+  }
+
+  //TODO: ADD "MEMBER OF INQ SQUAD TEXT"
+
 
   if (student.lastName == undefined) {
     console.log(student.firstName);
