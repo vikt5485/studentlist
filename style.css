@@ -65,17 +65,19 @@ p {
   padding-left: 5px;
   border: 1px solid;
   font-family: var(--paragraph-font);
+  margin-left: 30px;
 }
 
 #search_bar {
   width: 180px;
   position: relative;
   margin-top: 20px;
+
 }
 
 #search_img {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   width: 30px;
   height: 30px;
@@ -133,8 +135,8 @@ hr {
 .student,
 .info {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 600px;
+  grid-template-columns: repeat(4, 1fr);
+  width: 800px;
   grid-gap: 20px;
 }
 
@@ -164,6 +166,10 @@ hr {
   border: none;
   box-shadow: 0px 3px 5px 0 rgba(0, 0, 0, 0.4);
   transition: transform 0.3s;
+}
+
+.prefect {
+  cursor: pointer;
 }
 
 .expel:hover {
