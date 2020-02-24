@@ -17,7 +17,8 @@ const Student = {
   nickName: undefined,
   image: undefined,
   house: "",
-  prefect: false
+  prefect: false,
+  expelled: false
 };
 
 function start() {
@@ -160,6 +161,20 @@ function displayStudents(currentStudents) {
 function showStudent(student) {
   let klon = HTML.template.cloneNode(true).content;
 
+  if (student.prefect === true) {
+    klon.querySelector(".prefect").textContent = "⭐";
+  } else {
+    klon.querySelector(".prefect").textContent = "☆";
+  }
+
+  klon.querySelector(".prefect").addEventListener("click", () => {
+    displayStudents(makePrefect(student));
+  });
+
+  klon.querySelector(".expel").addEventListener("click", () => {
+    displayStudents(expelStudent(student));
+  })
+
   if (student.lastName == undefined) {
     klon.querySelector(".name").textContent = student.firstName;
   } else {
@@ -173,6 +188,26 @@ function showStudent(student) {
   HTML.dest.lastElementChild.querySelector(".name").addEventListener("click", () => {
     showPopup(student);
   });
+}
+
+function expelStudent(student) {
+  console.log("Expelled: " + student.firstName);
+  return currentStudents;
+}
+
+function makePrefect(student) {
+  console.log(student);
+  if (student.prefect === true) {
+    student.prefect = false;
+  } else {
+    student.prefect = true;
+  }
+
+  if (currentStudents.length < 1) {
+    return allStudents;
+  } else {
+    return currentStudents;
+  }
 }
 
 function showPopup(student) {
