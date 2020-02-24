@@ -172,6 +172,18 @@ hr {
   cursor: pointer;
 }
 
+.filter {
+  -webkit-appearance: none;
+  height: 35px;
+  font-family: var(--paragraph-font);
+  cursor: pointer;
+}
+
+.active-filter {
+  background-color: black;
+  color: white;
+}
+
 .expel:hover {
   transform: translateY(-2px);
 }

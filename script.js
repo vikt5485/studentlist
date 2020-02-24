@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", start);
 const HTML = {};
 let studentsJSON = [];
 let currentStudents = [];
-let selectedFilter;
 let allStudents = [];
+let expelledStudents = [];
+
+let selectedFilter;
 let sortBy;
 let sortDirection;
 
@@ -192,11 +194,29 @@ function showStudent(student) {
 
 function expelStudent(student) {
   console.log("Expelled: " + student.firstName);
-  return currentStudents;
+
+  console.log(student);
+
+  if (student.expelled === false) {
+    student.expelled = true;
+  }
+
+
+
+
+  // allStudents.splice(allStudents.indexOf(student));
+  // currentStudents = allStudents;
+
+  if (currentStudents.length < 1) {
+    return allStudents;
+  } else {
+    return currentStudents;
+  }
 }
 
 function makePrefect(student) {
   console.log(student);
+
   if (student.prefect === true) {
     student.prefect = false;
   } else {
@@ -250,6 +270,9 @@ function listReady() {
 function handleFilter() {
   selectedFilter = this.dataset.filter;
   console.log(selectedFilter);
+
+  document.querySelectorAll(".filter").forEach(filter => filter.className = "filter");
+  document.querySelector(`[data-filter="${selectedFilter}"]`).classList.add("active-filter");
 
   filterArray(selectedFilter);
 }
