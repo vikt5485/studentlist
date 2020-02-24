@@ -4,10 +4,11 @@ document.addEventListener("DOMContentLoaded", start);
 
 const HTML = {};
 let studentsJSON = [];
-let allStudents = [];
+let currentStudents = [];
 let selectedFilter;
-let studentArray = [];
-
+let allStudents = [];
+let sortBy;
+let sortDirection;
 
 const Student = {
   firstName: "",
@@ -27,6 +28,7 @@ function start() {
   HTML.wrapper = document.querySelector(".student-wrapper");
   HTML.studentName = document.querySelector(".popup-content>h2");
   HTML.searchField = document.querySelector("#search_field");
+
 
   getJson();
 }
@@ -124,27 +126,16 @@ function cleanData(studentData) {
   return allStudents;
 }
 
-function displayStudents(studentArray) {
+function displayStudents(currentStudents) {
   HTML.dest.innerHTML = "";
-  console.log(studentArray);
+  console.log(currentStudents);
 
-  studentArray.forEach(showStudent);
 
-  document.querySelector(".sort-name").addEventListener("click", function () {
-    studentArray = studentArray.sort(sortByFirstName);
-    displayStudents(studentArray);
-  });
+  currentStudents.forEach(showStudent);
 
-  document.querySelector(".sort-house").addEventListener("click", function () {
-    studentArray = studentArray.sort(sortByHouse);
-    displayStudents(studentArray);
-  });
-
+  document.querySelector("select#sorter").addEventListener("change", handleSorter);
   document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
-  // HTML.searchField.addEventListener("keyup", search);
-  document.querySelector("select#theme").addEventListener("change", selectTheme);
-
-
+  // document.querySelectorAll(".sort").forEach(btn => btn.addEventListener("select", handleSorter));
 
 
   HTML.searchField.addEventListener("keyup", function (search) {
@@ -157,7 +148,7 @@ function displayStudents(studentArray) {
       const name = student.querySelector(".name").textContent;
       student.className = "student";
 
-      if (name.toLowerCase().indexOf(searchValue) != -1) {
+      if (name.toLowerCase().includes(searchValue)) {
         student.classList.add("student");
       } else {
         student.classList.add("hide");
@@ -229,19 +220,18 @@ function handleFilter() {
 }
 
 function filterArray(selectedFilter) {
-  let filteredArray = [];
 
   if (selectedFilter == "*") {
-    filteredArray = allStudents;
+    currentStudents = allStudents;
   } else {
-    filteredArray = studentsFilteredByHouse(selectedFilter);
+    currentStudents = studentsFilteredByHouse(selectedFilter);
   }
 
-  displayStudents(filteredArray);
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
 
 function studentsFilteredByHouse(house) {
-  const result = allStudents.filter(filterFunction);
+  let result = allStudents.filter(filterFunction);
 
   function filterFunction(student) {
     return student.house === house;
@@ -250,28 +240,59 @@ function studentsFilteredByHouse(house) {
   return result;
 }
 
-function sortByFirstName(a, b) {
-  if (a.firstName < b.firstName) {
-    return -1;
-  } else {
-    return 1;
+function handleSorter() {
+  sortBy = this.value;
+  sortDirection = "asc";
+
+  if (this.value.includes("Desc")) {
+    console.log("desc");
+
+    sortBy = sortBy.slice(0, -4);
+    sortDirection = "desc";
   }
+
+  console.log(sortBy, sortDirection);
+
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
 
-function sortByHouse(a, b) {
-  if (a.house < b.house) {
-    return -1;
-  } else {
-    return 1;
+function sortStudents(sortBy, sortDirection) {
+  let desc = 1;
+
+  if (sortDirection === "desc") {
+    desc = -1;
   }
-}
 
+  if (currentStudents.length < 1) {
+    allStudents.sort(function (a, b) {
+      let x = a[sortBy];
+      let y = b[sortBy];
+      if (x < y) {
+        return -1 * desc;
+      }
+      if (x > y) {
+        return 1 * desc;
+      }
+      return 0;
+    });
 
-function search() {
-  console.log("search");
-}
+    return allStudents;
+    //displayStudents(allStudents);
 
+  } else {
+    currentStudents.sort(function (a, b) {
+      let x = a[sortBy];
+      let y = b[sortBy];
+      if (x < y) {
+        return -1 * desc;
+      }
+      if (x > y) {
+        return 1 * desc;
+      }
+      return 0;
+    });
 
-function selectTheme() {
-  document.querySelector("body").setAttribute("data-house", this.value);
+    return currentStudents;
+    //displayStudents(currentStudents);
+  }
 }

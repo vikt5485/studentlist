@@ -15,24 +15,31 @@
   <main>
     <section class="student-wrapper">
       <h1>Student List<br />Hogwarts 1991</h1>
-      <label id="theme-changer">
-        Select your house theme:
-        <select name="theme" id="theme">
-          <option value="-">-</option>
-          <option value="Gryffindor">Gryffindor</option>
-          <option value="Hufflepuff">Hufflepuff</option>
-          <option value="Ravenclaw">Ravenclaw</option>
-          <option value="Slytherin">Slytherin</option>
-        </select>
-      </label>
       <p>
         Filter by:
+        <button class="filter" data-filter="*">All students</button>
         <button class="filter" data-filter="Gryffindor">Gryffindor</button>
         <button class="filter" data-filter="Slytherin">Slytherin</button>
         <button class="filter" data-filter="Ravenclaw">Ravenclaw</button>
         <button class="filter" data-filter="Hufflepuff">Hufflepuff</button>
-        <button class="filter" data-filter="*">All students</button>
+        <button class="filter" data-filter="prefect">Prefects</button>
+        <button class="filter" data-filter="expelled">Expelled students</button>
+        <button class="filter" data-filter="nonExpelled">Non-expelled students</button>
+        <button class="filter" data-filter="fullBlodd">Full-blood</button>
+        <button class="filter" data-filter="halfBlodd">Half-blood</button>
       </p>
+      <label id="sorter-label">
+        Sort by:
+        <select name="sorter" id="sorter">
+          <option value="-">-</option>
+          <option class="sort" value="firstName">First name A-Z</option>
+          <option class="sort" value="firstNameDesc">First name Z-A</option>
+          <option class="sort" value="lastName">Last name A-Z</option>
+          <option class="sort" value="lastNameDesc">Last name Z-A</option>
+          <option class="sort" value="house">House</option>
+          <option class="sort" value="prefect">Prefect</option>
+        </select>
+      </label>
       <div id="search_bar">
         <input type="text" placeholder="Search student name.." name="search" id="search_field">
         <div id="search_img"><img src="assets/search_img.svg" alt=""></div>
