@@ -190,7 +190,8 @@ hr {
 
 
 /* POPUP STYLING */
-.popup {
+.popup,
+.popup-prefect {
   display: none;
   width: 100vw;
   height: 100vh;
@@ -249,6 +250,17 @@ hr {
 
 .hide {
   display: none;
+}
+
+
+.popup-prefect-content {
+  width: auto;
+  max-width: 800px;
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+  padding: 30px;
+  position: relative;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 
