@@ -24,9 +24,8 @@
         <button class="filter" data-filter="Hufflepuff">Hufflepuff</button>
         <button class="filter" data-filter="prefect">Prefects</button>
         <button class="filter" data-filter="expelled">Expelled students</button>
-        <button class="filter" data-filter="nonExpelled">Non-expelled students</button>
-        <button class="filter" data-filter="fullBlodd">Full-blood</button>
-        <button class="filter" data-filter="halfBlodd">Half-blood</button>
+        <button class="filter" data-filter="fullBlood">Full-blood</button>
+        <button class="filter" data-filter="halfBlood">Half-blood</button>
       </p>
       <label id="sorter-label">
         Sort by:
@@ -45,6 +44,7 @@
         <input type="text" placeholder="Search student name.." name="search" id="search_field">
         <div id="search_img"><img src="assets/search_img.svg" alt=""></div>
       </div>
+
       <hr />
       <div class="info">
         <h3 class="">Student name</h3>
@@ -65,6 +65,21 @@
       </article>
     </div>
 
+    <div class="popup-expel">
+      <article class="popup-expel-content">
+        <p class="expel-message"></p>
+        <button class="yes">Yes</button>
+        <button class="no">No</button>
+      </article>
+    </div>
+
+    <div class="popup-hacked">
+      <article class="popup-hacked-content">
+        <p class="hacked-message"></p>
+        <button class="close-btn">Close</button>
+      </article>
+    </div>
+
 
     <div class="popup">
       <article class="popup-content">
@@ -73,7 +88,7 @@
           <h2 class="popup-name"></h2>
           <h4 class="popup-house"></h4>
           <h4 class="popup-blood"></h4>
-          <h4 class="popup-prefect"></h4>
+          <h4 class="popup-prefect-h4"></h4>
           <h4 class="popup-expelled"></h4>
           <h4 class="popup-inq"></h4>
         </div>
@@ -81,6 +96,7 @@
         <div class="crest"></div>
       </article>
     </div>
+    <button id="hack">Hack the system</button>
   </main>
   <footer></footer>
   <template class="student-temp">
