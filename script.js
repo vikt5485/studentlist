@@ -7,6 +7,14 @@ let studentsJSON = [];
 let currentStudents = [];
 let allStudents = [];
 let expelledStudents = [];
+let bloodArray = [];
+
+
+let pureBloods = [];
+let pureBloodsTrue;
+
+let halfBloods = [];
+let halfBloodsTrue;
 
 let selectedFilter;
 let sortBy;
@@ -24,7 +32,8 @@ const Student = {
   house: "",
   prefect: false,
   expelled: false,
-  gender: ""
+  gender: "",
+  blood: ""
 };
 
 function start() {
@@ -44,8 +53,23 @@ async function getJson() {
   console.log("getJson");
 
   const jsonData = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
+  const jsonDataBlood = await fetch("https://petlatkea.dk/2020/hogwarts/families.json");
 
   studentsJSON = await jsonData.json();
+  bloodArray = await jsonDataBlood.json();
+
+  JSONLoaded(studentsJSON, bloodArray);
+}
+
+function JSONLoaded(studentsJSON, bloodArray) {
+  console.log(bloodArray);
+
+  halfBloods = bloodArray.half;
+  pureBloods = bloodArray.pure;
+
+  console.log(halfBloods);
+  console.log(pureBloods);
+
   studentsJSON.forEach(cleanData);
   currentStudents = allStudents;
   displayStudents(currentStudents);
@@ -123,10 +147,27 @@ function cleanData(studentData) {
 
   // HOUSE
   student.house = studentData.house.toLowerCase();
-  student.house = student.house.trim()
+  student.house = student.house.trim();
   let houseFirstChar = student.house.substring(0, 1);
   houseFirstChar = houseFirstChar.toUpperCase();
   student.house = houseFirstChar + student.house.substring(1);
+
+  // BLOOD
+  pureBloodsTrue = pureBloods.some(blood => {
+    return blood === student.lastName;
+  })
+
+  halfBloodsTrue = halfBloods.some(blood => {
+    return blood === student.lastName;
+  })
+
+  if (pureBloodsTrue === true) {
+    student.blood = "Pure-blood";
+  } else if (halfBloodsTrue === true) {
+    student.blood = "Half-blood";
+  } else {
+    student.blood = "Muggle";
+  }
 
   student.prefect = false;
   student.gender = studentData.gender.toLowerCase();
@@ -239,8 +280,6 @@ function showStudent(student) {
   HTML.dest.lastElementChild.querySelector(".name").addEventListener("click", () => {
     showPopup(student);
   });
-
-
 }
 
 function showPopup(student) {
@@ -252,7 +291,7 @@ function showPopup(student) {
   document.querySelector(".popup-content").setAttribute("data-house", student.house);
 
   document.querySelector(".popup-house").textContent = "House: " + student.house;
-  document.querySelector(".popup-blood").textContent = "Blood-status: " + undefined;
+  document.querySelector(".popup-blood").textContent = "Blood-status: " + student.blood;
   document.querySelector(".popup-content>img").src = `images/${student.image}.png`;
 
   if (student.prefect === true) {
@@ -318,6 +357,8 @@ function filterArray(selectedFilter) {
     currentStudents = studentsFilteredByPrefect();
   } else if (selectedFilter == "expelled") {
     currentStudents = expelledStudents;
+  } else if (selectedFilter == "Pure-blood" || selectedFilter == "Half-blood" || selectedFilter == "Muggle") {
+    currentStudents = studentsFilteredByBlood(selectedFilter);
   }
 
   displayStudents(sortStudents(sortBy, sortDirection));
@@ -352,6 +393,20 @@ function studentsFilteredByExpel() {
 
   function filterFunction(student) {
     return student.expelled === true;
+  }
+
+  return result;
+}
+
+function studentsFilteredByBlood(blood) {
+  currentStudents = allStudents.filter(student => {
+    return student.expelled === false;
+  })
+
+  let result = currentStudents.filter(filterFunction);
+
+  function filterFunction(student) {
+    return student.blood === blood;
   }
 
   return result;
@@ -400,10 +455,6 @@ function sortStudents(sortBy, sortDirection) {
 function expelStudent(student) {
   console.log("Expelled: " + student.firstName);
 
-  // document.querySelector(".popup-expel").classList.add("popup-appear");
-  // HTML.wrapper.classList.add("wrapper-effect");
-  // document.querySelector(".expel-message").textContent = `Are you sure you want to expel ${student.firstName}? This action cannot be undone.`;
-
   student.expelled = true;
   student.prefect = false;
 
@@ -414,24 +465,6 @@ function expelStudent(student) {
   expelledStudents.push(student);
 
   filterArray(selectedFilter);
-
-  // document.querySelector(".yes").addEventListener("click", () => {
-  //   console.log("hh");
-
-
-  // document.querySelector(".popup-expel").classList.remove("popup-appear");
-  // HTML.wrapper.classList.remove("wrapper-effect");
-
-  // })
-
-  // document.querySelector(".no").addEventListener("click", () => {
-  //   student.expelled = false;
-
-  //   document.querySelector(".popup-expel").classList.remove("popup-appear");
-  //   HTML.wrapper.classList.remove("wrapper-effect");
-
-  //   filterArray(selectedFilter);
-  // })
 }
 
 function makePrefect(clickedStudent) {
@@ -504,29 +537,3 @@ function hackTheSystem() {
 
   displayStudents(currentStudents);
 }
-
-
-// function removeStudent1(prefectsOfHouse, clickedStudent) {
-//   console.log("REMOVE STUDENT 1");
-
-//   prefectsOfHouse[0].prefect = false;
-//   clickedStudent.prefect = true;
-
-//   document.querySelector(".popup-prefect").classList.remove("popup-appear");
-//   HTML.wrapper.classList.remove("wrapper-effect");
-
-//   return currentStudents;
-// }
-
-// function removeStudent2(prefectsOfHouse, clickedStudent) {
-//   console.log("REMOVE STUDENT 2");
-
-//   prefectsOfHouse[1].prefect = false;
-//   clickedStudent.prefect = true;
-
-//   document.querySelector(".popup-prefect").classList.remove("popup-appear");
-//   HTML.wrapper.classList.remove("wrapper-effect");
-
-
-//   return currentStudents;
-// }

@@ -145,11 +145,11 @@ hr {
 }
 
 .boy:after {
-  content: " ♂";
+  content: " 🚹";
 }
 
 .girl:after {
-  content: " ♀";
+  content: " 🚺";
 }
 
 .info h3 {
