@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", start);
 
 const HTML = {};
 let studentsJSON = [];
-let currentStudents = [];
 let allStudents = [];
+let currentStudents = [];
 let expelledStudents = [];
 let bloodArray = [];
 
@@ -26,6 +26,8 @@ let sortDirection;
 let allPrefects;
 let prefectsOfHouse;
 let prefectsOfHouseAndGender;
+
+let hackCount = 0;
 
 const Student = {
   firstName: "",
@@ -66,18 +68,13 @@ async function getJson() {
 }
 
 function JSONLoaded(studentsJSON, bloodArray) {
-  console.log(bloodArray);
-
   halfBloods = bloodArray.half;
   pureBloods = bloodArray.pure;
 
-  console.log(halfBloods);
-  console.log(pureBloods);
-
   studentsJSON.forEach(cleanData);
   currentStudents = allStudents;
+
   displayStudents(currentStudents);
-  listReady();
 }
 
 function cleanData(studentData) {
@@ -182,9 +179,8 @@ function cleanData(studentData) {
 
 function displayStudents(currentStudents) {
   HTML.dest.innerHTML = "";
-  console.log(currentStudents);
-  document.querySelector(".info h3:nth-child(3)").classList.remove("hide");
 
+  document.querySelector(".info h3:nth-child(3)").classList.remove("hide");
 
   gryffindorList = studentsFilteredByHouse("Gryffindor");
   slytherinList = studentsFilteredByHouse("Slytherin");
@@ -202,12 +198,13 @@ function displayStudents(currentStudents) {
 
   currentStudents.forEach(showStudent);
 
+  console.log(currentStudents);
+  console.log("List is ready.");
+
   document.querySelector("select#sorter").addEventListener("change", handleSorter);
   document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
 
   HTML.searchField.addEventListener("keyup", function (search) {
-    console.log("key up");
-
     const searchValue = search.target.value.toLowerCase();
     const students = document.querySelectorAll(".student");
 
@@ -328,7 +325,6 @@ function showPopup(student) {
 
 
   if (student.lastName == undefined) {
-    console.log(student.firstName);
     HTML.studentName.textContent = student.firstName;
     document.querySelector(".popup-content>img").style.display = "none";
   } else if (student.middleName == undefined) {
@@ -349,14 +345,8 @@ function showPopup(student) {
   });
 }
 
-function listReady() {
-  console.log("listReady");
-
-}
-
 function handleFilter() {
   selectedFilter = this.dataset.filter;
-  console.log(selectedFilter);
 
   document.querySelectorAll(".filter").forEach(filter => filter.className = "filter");
   document.querySelector(`[data-filter="${selectedFilter}"]`).classList.add("active-filter");
@@ -436,13 +426,11 @@ function handleSorter() {
   sortDirection = "asc";
 
   if (this.value.includes("Desc")) {
-    console.log("desc");
-
     sortBy = sortBy.slice(0, -4);
     sortDirection = "desc";
   }
 
-  console.log(sortBy, sortDirection);
+  console.log(`List sorted by ${sortBy} in direction ${sortDirection}`);
 
   filterArray(selectedFilter);
   displayStudents(sortStudents(sortBy, sortDirection));
@@ -489,10 +477,6 @@ function expelStudent(student) {
 }
 
 function makePrefect(clickedStudent) {
-  console.log(clickedStudent);
-
-
-
   if (clickedStudent.house === "Gryffindor") {
     allPrefects = gryffindorList.filter(student => {
       return student.prefect === true;
@@ -512,11 +496,9 @@ function makePrefect(clickedStudent) {
     })
   }
 
-
   prefectsOfHouseAndGender = allPrefects.some(student => {
     return student.gender === clickedStudent.gender;
   })
-
 
   if (clickedStudent.prefect === true) {
     clickedStudent.prefect = false;
@@ -531,22 +513,25 @@ function makePrefect(clickedStudent) {
 }
 
 function hackTheSystem() {
-  document.querySelector("#hack").removeEventListener("click", hackTheSystem);
-  document.querySelector("#hack").textContent = "System has been hacked";
-  document.querySelector("#hack").classList.add("hacked");
-  let hackedStudent = Object.create(Student);
-  hackedStudent.firstName = "Viktor";
-  hackedStudent.middleName = "Friis";
-  hackedStudent.lastName = "Kjeldal";
-  hackedStudent.house = "Hogwarts";
-  hackedStudent.fullName = "Viktor Kjeldal";
-  hackedStudent.prefect = true;
-  hackedStudent.gender = "boy";
-  hackedStudent.blood = "Pure-blood";
-  hackedStudent.image = "kjeldal_v";
+  hackCount++;
+  if (hackCount === 1) {
+    document.querySelector("#hack").removeEventListener("click", hackTheSystem);
+    document.querySelector("#hack").textContent = "System has been hacked";
+    document.querySelector("#hack").classList.add("hacked");
+    let hackedStudent = Object.create(Student);
+    hackedStudent.firstName = "Viktor";
+    hackedStudent.middleName = "Friis";
+    hackedStudent.lastName = "Kjeldal";
+    hackedStudent.house = "Hogwarts";
+    hackedStudent.fullName = "Viktor Kjeldal";
+    hackedStudent.prefect = true;
+    hackedStudent.gender = "boy";
+    hackedStudent.blood = "Pure-blood";
+    hackedStudent.image = "kjeldal_v";
 
-  allStudents.unshift(hackedStudent);
+    allStudents.unshift(hackedStudent);
 
-  filterArray(selectedFilter);
-  displayStudents(sortStudents(sortBy, sortDirection));
+    filterArray(selectedFilter);
+    displayStudents(sortStudents(sortBy, sortDirection));
+  }
 }
