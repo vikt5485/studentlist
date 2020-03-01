@@ -124,7 +124,11 @@ select:focus {
 hr {
   border: 1px solid var(--secondary-color);
   margin: 20px 0;
-  max-width: 550px;
+  max-width: 750px;
+}
+
+#student_info {
+  white-space: pre-line;
 }
 
 .student-wrapper {
@@ -246,6 +250,17 @@ hr {
   margin: auto;
 }
 
+.prefect {
+  width: 30px;
+  height: 30px;
+  background-size: 100%;
+  background-image: var(--house-prefect);
+}
+
+.greyscale {
+  filter: grayscale(100%);
+}
+
 .close {
   position: absolute;
   top: 30px;
@@ -316,7 +331,6 @@ hr {
   }
 
   .crest {
-
     margin: 0;
   }
 }
@@ -327,22 +341,33 @@ hr {
   --primary-color: #eee117;
   --secondary-color: #000000;
   --house-crest: url(assets/hufflepuff-emblem.png);
+  --house-prefect: url(assets/prefect-hufflepuff.jpg);
 }
 
 [data-house="Gryffindor"] {
   --primary-color: #7f0909;
   --secondary-color: #ffc500;
   --house-crest: url(assets/gryffindor-emblem.png);
+  --house-prefect: url(assets/prefect-gryffindor.jpg);
 }
 
 [data-house="Ravenclaw"] {
   --primary-color: #000a90;
   --secondary-color: #946b2d;
   --house-crest: url(assets/ravenclaw-emblem.png);
+  --house-prefect: url(assets/prefect-ravenclaw.jpg);
 }
 
 [data-house="Slytherin"] {
   --primary-color: #0d6217;
   --secondary-color: #aaaaaa;
   --house-crest: url(assets/slytherin-emblem.png);
+  --house-prefect: url(assets/prefect-slytherin.jpg);
+}
+
+[data-house="Hogwarts"] {
+  --primary-color: black;
+  --secondary-color: white;
+  --house-crest: url(assets/prefect-hogwarts.png);
+  --house-prefect: url(assets/prefect-hogwarts.png);
 }
