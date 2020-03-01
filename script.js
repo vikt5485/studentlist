@@ -9,6 +9,10 @@ let allStudents = [];
 let expelledStudents = [];
 let bloodArray = [];
 
+let gryffindorList = [];
+let slytherinList = [];
+let hufflepuffList = [];
+let ravenclawList = [];
 
 let pureBloods = [];
 let pureBloodsTrue;
@@ -16,7 +20,7 @@ let pureBloodsTrue;
 let halfBloods = [];
 let halfBloodsTrue;
 
-let selectedFilter;
+let selectedFilter = "*";
 let sortBy;
 let sortDirection;
 let allPrefects;
@@ -181,13 +185,25 @@ function displayStudents(currentStudents) {
   console.log(currentStudents);
   document.querySelector(".info h3:nth-child(3)").classList.remove("hide");
 
+
+  gryffindorList = studentsFilteredByHouse("Gryffindor");
+  slytherinList = studentsFilteredByHouse("Slytherin");
+  hufflepuffList = studentsFilteredByHouse("Hufflepuff");
+  ravenclawList = studentsFilteredByHouse("Ravenclaw");
+
+  const currentListCount = currentStudents.length;
+  const expelledListCount = expelledStudents.length;
+  const gryffindorListCount = gryffindorList.length;
+  const slytherinListCount = slytherinList.length;
+  const hufflepuffListCount = hufflepuffList.length;
+  const ravenclawListCount = ravenclawList.length;
+
+  document.querySelector("#student_info").textContent = `${currentListCount} student(s) shown below\r\n${expelledListCount} student(s) expelled\r\n${gryffindorListCount} student(s) in Gryffindor\r\n${slytherinListCount} student(s) in Slytherin\r\n${ravenclawListCount} student(s) in Ravenclaw\r\n${hufflepuffListCount} student(s) in Hufflepuff`;
+
   currentStudents.forEach(showStudent);
 
   document.querySelector("select#sorter").addEventListener("change", handleSorter);
   document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", handleFilter));
-
-  // document.querySelectorAll(".sort").forEach(btn => btn.addEventListener("select", handleSorter));
-
 
   HTML.searchField.addEventListener("keyup", function (search) {
     console.log("key up");
@@ -211,10 +227,12 @@ function displayStudents(currentStudents) {
 function showStudent(student) {
   let klon = HTML.template.cloneNode(true).content;
 
+  klon.querySelector(".prefect").dataset.house = student.house;
+
   if (student.prefect === true) {
-    klon.querySelector(".prefect").textContent = "⭐";
+    klon.querySelector(".prefect").classList.remove("greyscale");
   } else {
-    klon.querySelector(".prefect").textContent = "☆";
+    klon.querySelector(".prefect").classList.add("greyscale");
   }
 
 
@@ -344,6 +362,7 @@ function handleFilter() {
   document.querySelector(`[data-filter="${selectedFilter}"]`).classList.add("active-filter");
 
   filterArray(selectedFilter);
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
 
 function filterArray(selectedFilter) {
@@ -361,7 +380,7 @@ function filterArray(selectedFilter) {
     currentStudents = studentsFilteredByBlood(selectedFilter);
   }
 
-  displayStudents(sortStudents(sortBy, sortDirection));
+  return currentStudents;
 }
 
 function studentsFilteredByHouse(house) {
@@ -425,6 +444,7 @@ function handleSorter() {
 
   console.log(sortBy, sortDirection);
 
+  filterArray(selectedFilter);
   displayStudents(sortStudents(sortBy, sortDirection));
 }
 
@@ -447,9 +467,9 @@ function sortStudents(sortBy, sortDirection) {
     return 0;
   });
 
+
   return currentStudents;
   //displayStudents(currentStudents);
-
 }
 
 function expelStudent(student) {
@@ -465,59 +485,49 @@ function expelStudent(student) {
   expelledStudents.push(student);
 
   filterArray(selectedFilter);
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
 
 function makePrefect(clickedStudent) {
   console.log(clickedStudent);
 
-  allPrefects = currentStudents.filter(student => {
-    return student.prefect === true;
-  })
 
-  prefectsOfHouse = allPrefects.some(student => {
-    return student.house === clickedStudent.house;
-  })
+
+  if (clickedStudent.house === "Gryffindor") {
+    allPrefects = gryffindorList.filter(student => {
+      return student.prefect === true;
+    })
+
+  } else if (clickedStudent.house === "Slytherin") {
+    allPrefects = slytherinList.filter(student => {
+      return student.prefect === true;
+    })
+  } else if (clickedStudent.house === "Ravenclaw") {
+    allPrefects = ravenclawList.filter(student => {
+      return student.prefect === true;
+    })
+  } else if (clickedStudent.house === "Hufflepuff") {
+    allPrefects = hufflepuffList.filter(student => {
+      return student.prefect === true;
+    })
+  }
+
 
   prefectsOfHouseAndGender = allPrefects.some(student => {
     return student.gender === clickedStudent.gender;
   })
 
+
   if (clickedStudent.prefect === true) {
     clickedStudent.prefect = false;
-  } else if (prefectsOfHouse === true && prefectsOfHouseAndGender === true) {
+  } else if (prefectsOfHouseAndGender === true) {
     console.log("Gender and house are the same");
-
-
-
-    // alert("kun 2 af hver");
-    // document.querySelector(".popup-prefect").classList.add("popup-appear");
-    // HTML.wrapper.classList.add("wrapper-effect");
-    // document.querySelector(".prefect-message").textContent = `You may only select two prefects from each house. Please remove either ${prefectsOfHouse[0].firstName} or ${prefectsOfHouse[1].firstName}.`;
-    // document.querySelector(".student1").textContent = `Remove ${prefectsOfHouse[0].firstName}`;
-    // document.querySelector(".student2").textContent = `Remove ${prefectsOfHouse[1].firstName}`;
-
-
-    // document.querySelector(".student1").addEventListener("click", () => {
-    //   displayStudents(removeStudent1(prefectsOfHouse, clickedStudent));
-    // })
-
-    // document.querySelector(".student2").addEventListener("click", () => {
-    //   displayStudents(removeStudent2(prefectsOfHouse, clickedStudent));
-    // })
-
   } else {
     clickedStudent.prefect = true;
   }
 
-
-  displayStudents(currentStudents);
-
-  // if (allPrefects.length > 7) {
-  //   alert("maks 8");
-  //   clickedStudent.prefect = false;
-  // }
-
-
+  filterArray(selectedFilter);
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
 
 function hackTheSystem() {
@@ -532,8 +542,11 @@ function hackTheSystem() {
   hackedStudent.fullName = "Viktor Kjeldal";
   hackedStudent.prefect = true;
   hackedStudent.gender = "boy";
+  hackedStudent.blood = "Pure-blood";
+  hackedStudent.image = "kjeldal_v";
 
-  currentStudents.unshift(hackedStudent);
+  allStudents.unshift(hackedStudent);
 
-  displayStudents(currentStudents);
+  filterArray(selectedFilter);
+  displayStudents(sortStudents(sortBy, sortDirection));
 }
